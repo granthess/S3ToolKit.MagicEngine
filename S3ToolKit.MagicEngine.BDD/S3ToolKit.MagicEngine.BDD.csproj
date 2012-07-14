@@ -57,6 +57,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PackageManagement.feature</DependentUpon>
     </Compile>
+    <Compile Include="PackageManagementSteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
