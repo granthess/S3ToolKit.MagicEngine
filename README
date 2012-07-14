@@ -1,0 +1,7 @@
+S3ToolKit.MagicEngine is the functional core of the CC Magic 2.5 (and later) software and provides the functionality to manage 
+custom content collections for The Sims 3 from Electronic Arts.  The CCMagic project is the UI that communicates with this engine.
+
+The library is licensed under the LGPL (Lesser GPL) and is a significant component of the CC-Magic content management system.
+
+For more information on CC-Magic or to contact the author, please visit http://sims3.the-prof.net/forums/
+
