@@ -1,6 +1,6 @@
 ﻿Feature: Package Management
 	In order to manage my Custom Content
-	As a CC Magic User
+	As a Sims player
 	I want to be able to manage .package files
 
 Scenario: Set Package Description
