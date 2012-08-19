@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+    Copyright 2012, Grant Hess
+
+    This file is part of S3ToolKit.MagicEngine.
+
+    S3ToolKit.Utils is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Foobar is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with CC Magic.  If not, see <http://www.gnu.org/licenses/>.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +25,8 @@ using System.Reflection;
 using S3ToolKit.MagicEngine.Core;
 using System.Collections.ObjectModel;
 using S3ToolKit.Utils.Registry;
+using S3ToolKit.Utils.Logging;
+using System.IO;
 
 namespace S3ToolKit.MagicEngine
 {
@@ -14,6 +34,8 @@ namespace S3ToolKit.MagicEngine
     // Singleton using Lazy<T> from http://geekswithblogs.net/BlackRabbitCoder/archive/2010/05/19/c-system.lazylttgt-and-the-singleton-design-pattern.aspx
     public class Engine : INotifyPropertyChanged 
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
         #region Singleton
         private static readonly Lazy<Engine> _instance = new Lazy<Engine>(() => new Engine());
 
@@ -50,6 +72,10 @@ namespace S3ToolKit.MagicEngine
 
         #region Fields
         private ObservableCollection<GameVersionEntry> _GameInfo;
+        #endregion
+
+        #region Manager Properties
+        public SettingsManager mgrSettings { get; private set; }
         #endregion
 
         #region Properties
@@ -122,6 +148,64 @@ namespace S3ToolKit.MagicEngine
             }
 
             return temp;
+        }
+        #endregion
+
+        #region Contructors
+        private Engine ()
+        {
+            mgrSettings = SettingsManager.Instance;
+        }
+        #endregion
+        #region Initialization
+        public void Initialize()
+        {
+            log.Debug("Initialize()");
+            // Start by ensuring that the configuration files are created and 
+            // contain sane data
+            ValidateSettings();
+
+            // Enable logging to the directory specified in the settings
+            EnableLogging();
+        }
+
+        private void ValidateSettings()
+        {
+            log.Debug("ValidateSettings()");
+
+            // Verify that the settings file exists and that we have values for:
+            // * Database Directory
+            // * Download Directory
+            // * Enable Compression
+            // * Log Directory
+                        
+            if (mgrSettings["dir_database"] == null)
+            {
+                mgrSettings["dir_database"] = mgrSettings.AppDataDirectory;
+            }
+
+            if (mgrSettings["dir_download"] == null)
+            {
+                mgrSettings["dir_download"] = Path.Combine(InstallationInfo.Instance.DocumentBaseDir, "Downloads");
+            }
+
+            if (mgrSettings["bool_compress"] == null)
+            {
+                mgrSettings["bool_compress"] = "true";
+            }
+
+            if (mgrSettings["dir_log"] == null)
+            {
+                mgrSettings["dir_log"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"Electronic Arts","CC Magic 2.5","Logs");
+            }
+        }
+
+        private void EnableLogging()
+        {
+            // Redirect logging to the configured log file
+            log.Debug("EnableLogging()");
+
+            LogManager.SetFilename(Path.Combine(mgrSettings["dir_log"],"CCMagic25.log"));
         }
         #endregion
     }

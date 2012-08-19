@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\GameVersionEntry.cs" />
+    <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
