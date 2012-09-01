@@ -13,10 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{316916
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S3ToolKit.GameFiles", "..\S3ToolKit.GameFiles\S3ToolKit.GameFiles\S3ToolKit.GameFiles.csproj", "{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S3ToolKit.Utils", "..\S3ToolKit.Utils\S3ToolKit.Utils\S3ToolKit.Utils.csproj", "{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S3ToolKit.MagicEngine.BDD", "S3ToolKit.MagicEngine.BDD\S3ToolKit.MagicEngine.BDD.csproj", "{BC9E7A32-E18E-4283-9C50-01ADE4200900}"
 EndProject
 Global
@@ -33,14 +29,6 @@ Global
 		{DCAF0B4E-0DBB-411D-BB42-2AACD77BAAD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCAF0B4E-0DBB-411D-BB42-2AACD77BAAD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCAF0B4E-0DBB-411D-BB42-2AACD77BAAD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC9E7A32-E18E-4283-9C50-01ADE4200900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC9E7A32-E18E-4283-9C50-01ADE4200900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC9E7A32-E18E-4283-9C50-01ADE4200900}.Release|Any CPU.ActiveCfg = Release|Any CPU

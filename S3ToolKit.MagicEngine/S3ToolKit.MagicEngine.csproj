@@ -36,8 +36,9 @@
     <Reference Include="ActiveSharp">
       <HintPath>..\..\CCMagic\packages\ActiveSharp.1.2.0.0\lib\net20\ActiveSharp.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CCMagic\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core.interfaces">
       <HintPath>..\packages\SpecFlow.NUnit.Runners.1.0.0\..\NUnit.Runners.2.6.0.12051\tools\lib\nunit.core.interfaces.dll</HintPath>
@@ -45,6 +46,17 @@
     <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="S3ToolKit.GameFiles, Version=1.0.23.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\S3ToolKit.GameFiles.1.0.23.1\lib\net40\S3ToolKit.GameFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="S3ToolKit.Utils, Version=1.0.14.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\S3ToolKit.Utils.1.0.14.1\lib\net40\S3ToolKit.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\packages\sharpcompress.0.8.1\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -62,6 +74,13 @@
   <ItemGroup>
     <Compile Include="Core\GameVersionEntry.cs" />
     <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Database\CollectionEntity.cs" />
+    <Compile Include="Database\CollectionItemEntity.cs" />
+    <Compile Include="Database\ConfigEntity.cs" />
+    <Compile Include="Database\DatafileEntity.cs" />
+    <Compile Include="Database\PackageEntity.cs" />
+    <Compile Include="Database\ResourceEntity.cs" />
+    <Compile Include="Database\SetEntity.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,16 +88,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\S3ToolKit.GameFiles\S3ToolKit.GameFiles\S3ToolKit.GameFiles.csproj">
-      <Project>{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}</Project>
-      <Name>S3ToolKit.GameFiles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\S3ToolKit.Utils\S3ToolKit.Utils\S3ToolKit.Utils.csproj">
-      <Project>{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}</Project>
-      <Name>S3ToolKit.Utils</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
