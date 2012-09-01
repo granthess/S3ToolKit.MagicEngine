@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("S3ToolKit.MagicEngine")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library to encapsulate functionality of CC Magic.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("the-prof.net")]
 [assembly: AssemblyProduct("S3ToolKit.MagicEngine")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
