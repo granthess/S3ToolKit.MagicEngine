@@ -82,7 +82,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)/packages/NUnit.Runners.2.6.0.12051/tools/nunit-console.exe" "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)/packages/NUnit.Runners.2.6.1/tools/nunit-console.exe" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
