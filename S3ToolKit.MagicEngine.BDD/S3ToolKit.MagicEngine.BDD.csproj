@@ -40,6 +40,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="S3ToolKit.GameFiles, Version=1.0.23.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\S3ToolKit.GameFiles.1.0.23.1\lib\net40\S3ToolKit.GameFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="S3ToolKit.Utils, Version=1.0.14.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\S3ToolKit.Utils.1.0.14.1\lib\net40\S3ToolKit.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\packages\sharpcompress.0.8.1\lib\net40\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,16 +70,9 @@
     </Compile>
     <Compile Include="PackageManagementSteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\S3ToolKit.GameFiles\S3ToolKit.GameFiles\S3ToolKit.GameFiles.csproj">
-      <Project>{211A204E-DAA0-4730-8C0D-A38EB58EAF2C}</Project>
-      <Name>S3ToolKit.GameFiles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\S3ToolKit.Utils\S3ToolKit.Utils\S3ToolKit.Utils.csproj">
-      <Project>{071FF9D6-33A1-4C68-8D57-090C13AF4DCE}</Project>
-      <Name>S3ToolKit.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\S3ToolKit.MagicEngine\S3ToolKit.MagicEngine.csproj">
       <Project>{5DD8C687-732F-4B7F-A517-09A4CF994A39}</Project>
       <Name>S3ToolKit.MagicEngine</Name>

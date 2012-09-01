@@ -40,6 +40,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.0.12054\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="S3ToolKit.GameFiles">
+      <HintPath>..\packages\S3ToolKit.GameFiles.1.0.23.1\lib\net40\S3ToolKit.GameFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="S3ToolKit.Utils">
+      <HintPath>..\packages\S3ToolKit.Utils.1.0.14.1\lib\net40\S3ToolKit.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress">
+      <HintPath>..\packages\sharpcompress.0.8.1\lib\net40\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

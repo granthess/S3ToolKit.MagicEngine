@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace S3ToolKit.MagicEngine.Test
+namespace S3ToolKit.MagicEngine.BDD
 {
     [TestFixture]
-    public class Test1
+    public class Test
     {
         [Test]
         public void TempTest()
