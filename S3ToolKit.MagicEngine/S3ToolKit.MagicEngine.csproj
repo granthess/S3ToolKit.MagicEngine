@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ActiveSharp">
-      <HintPath>..\..\CCMagic\packages\ActiveSharp.1.2.0.0\lib\net20\ActiveSharp.dll</HintPath>
+    <Reference Include="ActiveSharp, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ActiveSharp.1.2.0.0\lib\net20\ActiveSharp.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
