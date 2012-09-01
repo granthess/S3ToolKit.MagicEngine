@@ -37,8 +37,7 @@
       <HintPath>..\packages\ActiveSharp.1.2.0.0\lib\net20\ActiveSharp.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\CCMagic\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core.interfaces">
       <HintPath>..\packages\SpecFlow.NUnit.Runners.1.0.0\..\NUnit.Runners.2.6.0.12051\tools\lib\nunit.core.interfaces.dll</HintPath>
