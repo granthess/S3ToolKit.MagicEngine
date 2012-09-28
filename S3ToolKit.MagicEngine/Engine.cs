@@ -157,6 +157,7 @@ namespace S3ToolKit.MagicEngine
             mgrSettings = SettingsManager.Instance;
         }
         #endregion
+
         #region Initialization
         public void Initialize()
         {

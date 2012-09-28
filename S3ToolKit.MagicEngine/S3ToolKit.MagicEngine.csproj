@@ -71,6 +71,7 @@
     <Compile Include="Database\ResourceEntity.cs" />
     <Compile Include="Database\SetEntity.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
