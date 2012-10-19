@@ -23,6 +23,7 @@ using System.Text;
 using S3ToolKit.Utils;
 using S3ToolKit.Utils.Logging;
 using System.IO;
+using S3ToolKit.Utils.Registry;
 
 namespace S3ToolKit.MagicEngine.Core
 {
@@ -45,10 +46,11 @@ namespace S3ToolKit.MagicEngine.Core
         #region Properties
         public string this[string index] { get { return GetValue(index); } set { SetValue(index, value); } }
         public string AppDataDirectory { get; private set; }
+        public InstalledGameEntry Game { get { return InstallationInfo.Instance.NewestGame; } }
         #endregion
 
         #region Constructors
-        private SettingsManager()
+        private SettingsManager() 
         {
             AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CC Magic");
             SettingsFile = new IniFile(Path.Combine(AppDataDirectory, "CCMAGIC.ini"));

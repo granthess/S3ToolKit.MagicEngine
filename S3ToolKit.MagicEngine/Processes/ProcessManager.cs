@@ -24,11 +24,13 @@ using System.Text;
 using System.ComponentModel;
 using System.Reflection;
 using S3ToolKit.Utils.Logging;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace S3ToolKit.MagicEngine.Processes
 {
     // Singleton using Lazy<T> from http://geekswithblogs.net/BlackRabbitCoder/archive/2010/05/19/c-system.lazylttgt-and-the-singleton-design-pattern.aspx
-    class ProcessManager : INotifyPropertyChanged
+    public class ProcessManager : INotifyPropertyChanged
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
@@ -64,6 +66,107 @@ namespace S3ToolKit.MagicEngine.Processes
 
             OnPropertyChanged(changedProperty.Name);
         }
+        #endregion
+
+        #region Fields        
+        private ConcurrentQueue<IMagicProcess> WorkQueue;
+        private List<IMagicProcess> _ActiveTaskList;
+        private readonly object _ActiveTaskListLock = new object();
+        private List<Task> ThreadPool;
+        private bool _IsRunning;
+        private bool _IsStopping;
+        private int _ThreadMaxCount;
+        
+        #endregion
+
+        #region Properties
+        public int ThreadMaxCount
+        {
+            get { return _ThreadMaxCount; }
+            set { SetValue(ref _ThreadMaxCount, value); }
+        }
+        public bool IsRunning 
+             {
+               get { return _IsRunning; }
+               set { SetValue(ref _IsRunning, value); }   // assigns value and does prop change notification, all in one line
+             }
+        public bool IsStopping
+        {
+            get { return _IsStopping; }
+            set { SetValue(ref _IsStopping, value); }   // assigns value and does prop change notification, all in one line
+        }
+        #endregion
+
+        #region Constructors
+        private ProcessManager()
+        {
+            log.Debug("Starting Process Manager");
+            ThreadMaxCount = Environment.ProcessorCount * 4;
+            if (ThreadMaxCount < 4)
+                ThreadMaxCount = 4;
+            log.Debug(string.Format("Found {0} CPU Cores, starting {1} Threads",Environment.ProcessorCount, ThreadMaxCount));
+
+            // Configure housekeeping stuff
+            _ActiveTaskList = new List<IMagicProcess>();
+            WorkQueue = new ConcurrentQueue<IMagicProcess>();
+            IsRunning = false;
+
+            // Create and start the task pool
+            ThreadPool = new List<Task>();
+            
+            for (int i = 0; i < ThreadMaxCount; i++)
+            {
+                Task SchedulerTask;
+                SchedulerTask = new Task(() => ProcessQueueRunner(),
+                        TaskCreationOptions.LongRunning | TaskCreationOptions.PreferFairness);
+                SchedulerTask.Start();  // Starts the queue runner, but doesn't enable task execution yet            
+                ThreadPool.Add(SchedulerTask);
+                log.Debug(string.Format("Thread Created: ID {0}", SchedulerTask.Id));
+            }
+        }
+        #endregion
+
+        #region High Level Process Management
+        public void StartProcessQueue()
+        {
+            IsRunning = true;  // queue runner checks this and starts/stops child threads as needed            
+            log.Debug("Enable threads");
+        }
+
+        public void StopProcessQueue()
+        {
+            IsRunning = false;
+            log.Debug("Disable threads");
+        }
+
+        private void ProcessQueueRunner()
+        {
+            log.Debug(string.Format("Thread {0} starting", System.Threading.Thread.CurrentThread.ManagedThreadId));
+            while (!IsStopping)
+            {
+                IMagicProcess NextTask;
+                if (WorkQueue.TryDequeue(out NextTask))
+                {
+                    lock (_ActiveTaskListLock)
+                    {
+                        _ActiveTaskList.Add(NextTask);
+                    }
+                    // DO processing here
+
+                    lock (_ActiveTaskListLock)
+                    {
+                        _ActiveTaskList.Remove(NextTask);
+                    }
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep(250);
+                }
+
+            }
+            IsRunning = false;
+            log.Debug(string.Format("Thread {0} stopping", System.Threading.Thread.CurrentThread.ManagedThreadId));
+        } 
         #endregion
     }
 }

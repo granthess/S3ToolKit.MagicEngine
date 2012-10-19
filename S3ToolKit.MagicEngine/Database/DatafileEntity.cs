@@ -10,7 +10,7 @@ namespace S3ToolKit.MagicEngine.Database
     {
         #region Data Properties
         [Key]
-        public int Id { get; set; }
+        public int Id { get; set; } 
 
         // Data Properties
         public double Rating { get; set; }
@@ -21,6 +21,7 @@ namespace S3ToolKit.MagicEngine.Database
         public DateTime InstallDate { get; set; }
 
         public bool IsEnabled { get; set; }
+        public bool IsTS3Pack { get; set; }
 
         // Navigation Properties
         public virtual List<PackageEntity> Packages { get; set; }

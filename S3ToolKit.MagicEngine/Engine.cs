@@ -27,12 +27,18 @@ using System.Collections.ObjectModel;
 using S3ToolKit.Utils.Registry;
 using S3ToolKit.Utils.Logging;
 using System.IO;
+using S3ToolKit.MagicEngine.Database;
+using System.Data;
+using System.Data.Common;
+using S3ToolKit.MagicEngine.Datafile;
+using S3ToolKit.MagicEngine.Processes;
+
 
 namespace S3ToolKit.MagicEngine
 {
 
     // Singleton using Lazy<T> from http://geekswithblogs.net/BlackRabbitCoder/archive/2010/05/19/c-system.lazylttgt-and-the-singleton-design-pattern.aspx
-    public class Engine : INotifyPropertyChanged 
+    public class Engine : INotifyPropertyChanged
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
@@ -76,6 +82,9 @@ namespace S3ToolKit.MagicEngine
 
         #region Manager Properties
         public SettingsManager mgrSettings { get; private set; }
+        public DatabaseManager mgrDatabase { get; private set; }
+        public FileManager mgrFiles { get; private set; }
+        public ProcessManager mgrProcess { get; private set; } 
         #endregion
 
         #region Properties
@@ -152,9 +161,12 @@ namespace S3ToolKit.MagicEngine
         #endregion
 
         #region Contructors
-        private Engine ()
+        private Engine()
         {
             mgrSettings = SettingsManager.Instance;
+            mgrDatabase = DatabaseManager.Instance;
+            mgrFiles = FileManager.Instance;
+
         }
         #endregion
 
@@ -168,6 +180,15 @@ namespace S3ToolKit.MagicEngine
 
             // Enable logging to the directory specified in the settings
             EnableLogging();
+
+            // Create a database context and validate the database
+            mgrDatabase.ValidateDatabase();
+
+            // Now open up the Datafile Manager 
+            mgrFiles.Initialize();
+
+            // And start background processing
+            mgrProcess.StartProcessQueue();
         }
 
         private void ValidateSettings()
@@ -179,7 +200,7 @@ namespace S3ToolKit.MagicEngine
             // * Download Directory
             // * Enable Compression
             // * Log Directory
-                        
+
             if (mgrSettings["dir_database"] == null)
             {
                 mgrSettings["dir_database"] = mgrSettings.AppDataDirectory;
@@ -197,7 +218,7 @@ namespace S3ToolKit.MagicEngine
 
             if (mgrSettings["dir_log"] == null)
             {
-                mgrSettings["dir_log"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"Electronic Arts","CC Magic 2.5","Logs");
+                mgrSettings["dir_log"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Electronic Arts", "CC Magic 2.5", "Logs");
             }
         }
 
@@ -206,8 +227,10 @@ namespace S3ToolKit.MagicEngine
             // Redirect logging to the configured log file
             log.Debug("EnableLogging()");
 
-            LogManager.SetFilename(Path.Combine(mgrSettings["dir_log"],"CCMagic25.log"));
+            LogManager.SetFilename(Path.Combine(mgrSettings["dir_log"], "CCMagic25.log"));
         }
         #endregion
+
+        
     }
 }

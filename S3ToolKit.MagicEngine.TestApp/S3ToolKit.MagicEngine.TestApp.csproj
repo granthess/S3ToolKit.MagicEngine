@@ -2,20 +2,21 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5DD8C687-732F-4B7F-A517-09A4CF994A39}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{DCDFE71E-0678-4024-8384-D71A31584FDB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>S3ToolKit.MagicEngine</RootNamespace>
-    <AssemblyName>S3ToolKit.MagicEngine</AssemblyName>
+    <RootNamespace>S3ToolKit.MagicEngine.TestApp</RootNamespace>
+    <AssemblyName>S3ToolKit.MagicEngine.TestApp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,22 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ActiveSharp, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ActiveSharp.1.2.0.0\lib\net20\ActiveSharp.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="S3ToolKit.GameFiles, Version=1.0.23.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\S3ToolKit.GameFiles.1.0.23.1\lib\net40\S3ToolKit.GameFiles.dll</HintPath>
-    </Reference>
-    <Reference Include="S3ToolKit.Utils, Version=1.0.17.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\S3ToolKit.Utils.1.0.17.1\lib\net40\S3ToolKit.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress">
-      <HintPath>..\packages\sharpcompress.0.8.1\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -65,35 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\GameVersionEntry.cs" />
-    <Compile Include="Core\SettingsManager.cs" />
-    <Compile Include="Database\CollectionEntity.cs" />
-    <Compile Include="Database\CollectionItemEntity.cs" />
-    <Compile Include="Database\ConfigEntity.cs" />
-    <Compile Include="Database\DatabaseManager.cs" />
-    <Compile Include="Database\MagicContext.cs" />
-    <Compile Include="Database\DatafileEntity.cs" />
-    <Compile Include="Database\PackageEntity.cs" />
-    <Compile Include="Database\ResourceEntity.cs" />
-    <Compile Include="Database\SetEntity.cs" />
-    <Compile Include="Datafile\FileManager.cs" />
-    <Compile Include="Datafile\IFileProcess.cs" />
-    <Compile Include="Datafile\ImportPackage.cs" />
-    <Compile Include="Engine.cs" />
-    <Compile Include="Processes\IMagicProcess.cs" />
-    <Compile Include="Processes\ProcessManager.cs" />
-    <Compile Include="Processes\TaskStatus.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-    <None Include="S3ToolKit.MagicEngine.nuspec" />
+    <ProjectReference Include="..\S3ToolKit.MagicEngine\S3ToolKit.MagicEngine.csproj">
+      <Project>{5DD8C687-732F-4B7F-A517-09A4CF994A39}</Project>
+      <Name>S3ToolKit.MagicEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="System.Data.SqlServerCe.Entity\System.Data.SqlServerCe.Entity.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

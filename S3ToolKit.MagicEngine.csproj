@@ -80,6 +80,7 @@
     <Compile Include="Datafile\IFileProcess.cs" />
     <Compile Include="Datafile\ImportPackage.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Processes\IMagicProcess.cs" />
     <Compile Include="Processes\ProcessManager.cs" />
     <Compile Include="Processes\TaskStatus.cs" />
