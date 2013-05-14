@@ -24,6 +24,7 @@ namespace S3ToolKit.MagicEngine.Database
         public bool IsTS3Pack { get; set; }
 
         // Navigation Properties
+        public virtual SetEntity ParentSet { get; set; }
         public virtual List<PackageEntity> Packages { get; set; }
         #endregion
     }

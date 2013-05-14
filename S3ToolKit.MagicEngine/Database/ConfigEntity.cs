@@ -22,5 +22,13 @@ namespace S3ToolKit.MagicEngine.Database
         // Navigation Properties
         public virtual List<SetEntity> Sets { get; set; }
         #endregion
+
+        #region Helpers
+        public override string ToString()
+        {
+            string S1 = IsDefault ? "[D]" : "[ ]";
+            return string.Format("{0} {1} (Has {2} Sets) -- {3}", S1, Name, Sets.Count, Description);
+        }
+        #endregion
     }
 }

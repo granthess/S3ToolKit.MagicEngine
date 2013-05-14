@@ -31,7 +31,7 @@ namespace S3ToolKit.MagicEngine.Database
 {
     public class DatabaseManager : INotifyPropertyChanged
     {
-                private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
         #region Singleton
         private static readonly Lazy<DatabaseManager> _instance = new Lazy<DatabaseManager>(() => new DatabaseManager());
@@ -93,10 +93,8 @@ namespace S3ToolKit.MagicEngine.Database
         #region Helpers
         public MagicContext GetNewContext()
         {
-            MagicContext temp = new MagicContext();
-            // This should point the database path to the correct folder as set by the settings manager
-            temp.Database.Connection.ConnectionString = string.Format("Data Source={0};", Path.Combine(mgrSettings["dir_database"], "Magic.sdf"));
-            return temp;
+            string DatabaseFile = Path.Combine(mgrSettings["dir_database"],"database", "CCM.sdf");
+            return MagicContext.CreateInstance(DatabaseFile);
         }
         #endregion
 
@@ -104,6 +102,7 @@ namespace S3ToolKit.MagicEngine.Database
         #region Database Validation
         public void ValidateDatabase()
         {
+            log.Info("ValidateDatabase()");
             ValidateDefaults();
         }
 

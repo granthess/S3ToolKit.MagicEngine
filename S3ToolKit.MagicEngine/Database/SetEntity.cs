@@ -35,5 +35,13 @@ namespace S3ToolKit.MagicEngine.Database
         // Datafile (.sims3pack or .package)
         public virtual List<DatafileEntity> Datafiles { get; set; }
         #endregion
+
+        #region Helpers
+        public override string ToString()
+        {
+            string S1 = IsDefault ? "[D]" : "[ ]";
+            return string.Format("{0} {1} (In {2} Configs) -- {3}", S1, Name, Configuations.Count, Description);
+        }
+        #endregion
     }
 }
