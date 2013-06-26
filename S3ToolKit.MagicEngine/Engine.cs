@@ -188,7 +188,7 @@ namespace S3ToolKit.MagicEngine
             mgrFiles.Initialize();
 
             // And start background processing
-            //mgrProcess.StartProcessQueue();
+            // mgrProcess.StartProcessQueue();
         }
 
         private void ValidateSettings()

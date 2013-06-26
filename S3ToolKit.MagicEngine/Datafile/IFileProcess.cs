@@ -7,5 +7,8 @@ namespace S3ToolKit.MagicEngine.Datafile
 {
     public interface IFileProcess 
     {
+        string Filename { get; }
+
+        string ProcessType { get; }
     }
 }

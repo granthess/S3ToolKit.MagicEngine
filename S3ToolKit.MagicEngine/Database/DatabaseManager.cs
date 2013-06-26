@@ -105,7 +105,7 @@ namespace S3ToolKit.MagicEngine.Database
             log.Info("ValidateDatabase()");
             ValidateDefaults();
         }
-
+        
         private void ValidateDefaults()
         {
             MagicContext Context = GetNewContext();

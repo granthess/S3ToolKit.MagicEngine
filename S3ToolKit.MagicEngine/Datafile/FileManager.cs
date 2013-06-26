@@ -29,6 +29,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using S3ToolKit.MagicEngine.Core;
 using S3ToolKit.Utils.Registry;
+using S3ToolKit.GameFiles.Package;
 using System.Threading.Tasks;
 
 namespace S3ToolKit.MagicEngine.Datafile
@@ -120,15 +121,100 @@ namespace S3ToolKit.MagicEngine.Datafile
             {
                 if (FileTasks.TryTake(out Process))
                 {
-                    Console.WriteLine("Found file: {0}", (Process as ImportPackage).Filename);
+                    log.Debug(string.Format("Starting background process: {0}", Process.ToString()));
 
-                }
+                    string ProcessType = Process.ProcessType;                    
+                    if (ProcessType == "ImportPACKAGE")
+                    {
+                        ImportDBPF(Process.Filename);
+                    }
+                    else if (ProcessType == "ImportTS3PACK")
+                    {
+                        ImportTS3Pack(Process.Filename);
+                    }
+                    else
+                    {
+                        log.Warn(string.Format("Unknown background process type {0}", ProcessType));
+                    }
+                }                
                 else
                 {
-                    Console.WriteLine("oops, couldn't get a task");
+                    log.Warn("No tasks left!");
+                    break;
                 }
             }
         }
         #endregion
+
+        #region Import from file
+        private void ImportDBPF(string Filename)
+        {
+            // The database context to work with
+            MagicContext Context = DatabaseManager.Instance.GetNewContext();
+            
+            // find out if this file already exists in the database ??!?!
+            bool dupName = (from i in Context.Datafiles
+                            where i.FileName == Filename
+                            select i).Count() > 0;
+
+            // Just skip for now since we aren't doing the proper move to packages directory stuff yet
+            if (dupName)
+                return;
+
+            // Get a new DatafileEntity and start populating it
+            DatafileEntity newFile = Context.Datafiles.Create<DatafileEntity>();
+            newFile.FileName = Filename;
+            newFile.InstallDate = DateTime.Now;
+            newFile.Rating = -1;  
+            newFile.Category = string.Empty;
+            newFile.Description = string.Empty;
+            newFile.URL = string.Empty;
+        
+            newFile.IsEnabled = true;
+            newFile.IsTS3Pack = false;
+
+            // now import the DBPF portion
+            using (Stream datastream = File.OpenRead(Filename))
+            {
+                ImportSubPackage(Context, datastream, newFile, Path.GetFileNameWithoutExtension(Filename));
+            }
+
+            Context.Datafiles.Add(newFile);            
+            Context.SaveChanges();
+        }
+
+        private void ImportTS3Pack(string Filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        private PackageEntity ImportSubPackage(MagicContext Context, Stream datastream, DatafileEntity entity, string Name)
+        {
+            // Load up the package and retreive the information
+            DBPFPackage pkg = new DBPFPackage(datastream);
+
+            // since we didn't exception out, we have a package...
+            // import the values
+            PackageEntity package = Context.Packages.Create<PackageEntity>();
+            Context.Packages.Add(package);
+            package.Name = Name;
+            package.IsEnabled = true;
+            package.Description = string.Empty;
+            package.ParentDatafile = entity;
+            
+            // and the resources
+            foreach (ResourceEntry Resource in pkg.Resources)
+            {
+                ResourceEntity Rsrc = Context.Resources.Create<ResourceEntity>();
+                Context.Resources.Add(Rsrc);
+                Rsrc.IsActive = true;
+                Rsrc.Key = Resource.Key.ToString();
+                Rsrc.ParentPackage = package;
+            }
+
+            return package;
+        }
+        #endregion
+
     }
 }
