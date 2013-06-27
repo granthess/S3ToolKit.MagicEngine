@@ -57,7 +57,7 @@ namespace S3ToolKit.MagicEngine.Core
             uint nIconIndex);
 
 
-        private InstalledGameEntry baseEntry;
+        public InstalledGameEntry baseEntry;
 
         public GameVersionEntry(InstalledGameEntry Entry)
         {
@@ -98,7 +98,7 @@ namespace S3ToolKit.MagicEngine.Core
             Reader.Close();
         }
 
-        private string GetBinDirectory()
+        protected string GetBinDirectory()
         {
             string DLLFileName = Path.Combine(baseEntry.InstallDir, "Game", "Bin");
 

@@ -32,6 +32,7 @@ using System.Data;
 using System.Data.Common;
 using S3ToolKit.MagicEngine.Datafile;
 using S3ToolKit.MagicEngine.Processes;
+using System.Data.Entity;
 
 
 namespace S3ToolKit.MagicEngine
@@ -78,6 +79,9 @@ namespace S3ToolKit.MagicEngine
 
         #region Fields
         private ObservableCollection<GameVersionEntry> _GameInfo;
+        public MagicContext ViewContext;
+
+        private ConfigEntity _CurrentConfig;
         #endregion
 
         #region Manager Properties
@@ -89,6 +93,51 @@ namespace S3ToolKit.MagicEngine
 
         #region Properties
         public ObservableCollection<GameVersionEntry> GameInfo { get { return GetGameInfo(); } }
+        #endregion
+
+        #region Database Visualizers 
+        public DbSet<CollectionEntity> Collections { get; private set; }
+        public DbSet<CollectionItemEntity> CollectionItems { get; private set; }
+        public DbSet<ConfigEntity> Configurations { get; private set; }
+        public DbSet<DatafileEntity> Datafiles { get; private set; }
+        public DbSet<PackageEntity> Packages { get; private set; }
+        public DbSet<ResourceEntity> Resources { get; private set; }
+        public DbSet<SetEntity> Sets { get; private set; }
+
+        public List<SetEntity> RootSets { get { return GetRootSets(); } }
+        private List<SetEntity> GetRootSets()
+        {
+            return (from i in Sets
+                    where i.ParentSet == null
+                    select i).ToList<SetEntity>();
+        }
+
+        public ConfigEntity CurrentConfig { get { return _CurrentConfig; } set { SetCurrentConfig (value); } }
+        private void SetCurrentConfig(ConfigEntity value)
+        {
+            if (_CurrentConfig != null & _CurrentConfig != value)
+            {
+                _CurrentConfig.IsActive = false;
+            }
+            _CurrentConfig = value;
+            _CurrentConfig.IsActive = true;
+            OnPropertyChanged("CurrentConfig");
+            UpdateSetLists();
+        }
+
+        private SetEntity _CurrentSet;
+        public SetEntity CurrentSet { get { return _CurrentSet; } set { SetCurrentSet(value); } }
+        private void SetCurrentSet(SetEntity value)
+        {
+            _CurrentSet = value;
+            OnPropertyChanged("CurrentSet");
+        }
+
+        public List<SetEntity> CFGSetsToDisable { get; private set; }
+        public List<SetEntity> CFGSetsToEnable { get; private set; }
+
+        public ObservableCollection<SetEntity> EnabledSets { get { return GetEnabledSetList(); } }
+        public ObservableCollection<SetEntity> DisabledSets { get { return GetDisabledSetList(); } }
         #endregion
 
         #region Private Helpers
@@ -157,7 +206,7 @@ namespace S3ToolKit.MagicEngine
             }
 
             return temp;
-        }
+        }        
         #endregion
 
         #region Contructors
@@ -167,6 +216,8 @@ namespace S3ToolKit.MagicEngine
             mgrDatabase = DatabaseManager.Instance;
             mgrFiles = FileManager.Instance;
 
+            CFGSetsToEnable = new List<SetEntity>();
+            CFGSetsToDisable = new List<SetEntity>();
         }
         #endregion
 
@@ -183,6 +234,22 @@ namespace S3ToolKit.MagicEngine
 
             // Create a database context and validate the database
             mgrDatabase.ValidateDatabase();
+
+            // Get local db Context -- separate from the commanding context
+            ViewContext = mgrDatabase.GetNewContext();
+            Collections = ViewContext.Collections;
+            CollectionItems = ViewContext.CollectionItems;
+            Configurations = ViewContext.Configurations; Configurations.Load();
+            Datafiles = ViewContext.Datafiles;
+            Packages = ViewContext.Packages;
+            Resources = ViewContext.Resources;
+            Sets = ViewContext.Sets;
+
+            CurrentConfig = (from i in Configurations
+                             where i.IsActive == true
+                             select i).First<ConfigEntity>();
+
+            CurrentSet = Sets.First<SetEntity>(); 
 
             // Now open up the Datafile Manager 
             mgrFiles.Initialize();
@@ -231,6 +298,176 @@ namespace S3ToolKit.MagicEngine
         }
         #endregion
 
-        
+        #region Configuration Tab actions
+        public void AddConfig()
+        {
+            ConfigEntity NewCFG = ViewContext.Configurations.Create<ConfigEntity>();
+            NewCFG.IsDefault = false;
+            NewCFG.IsActive = true;
+            NewCFG.Name = "<New Config>";
+            NewCFG.Description = "";
+
+            ViewContext.Configurations.Add(NewCFG);
+            CurrentConfig = NewCFG;
+            ViewContext.SaveChanges();
+        }
+
+        public void RemoveConfig()
+        {
+            ConfigEntity temp = CurrentConfig;
+            temp.IsActive = false;
+            _CurrentConfig = null;
+
+            CurrentConfig = (from i in ViewContext.Configurations
+                             where i.IsDefault == true
+                             select i).First<ConfigEntity>();
+
+            temp.Sets.Clear();
+            ViewContext.Configurations.Remove(temp);
+            
+            ViewContext.SaveChanges();
+        }
+
+        public void EnableSets(List<SetEntity> Sets)
+        {
+            foreach (SetEntity entry in Sets)
+            {
+                entry.Configuations.Add(CurrentConfig);
+            }
+            ViewContext.SaveChanges();
+            UpdateSetLists();
+        }
+
+        public void DisableSets(List<SetEntity> Sets)
+        {
+            foreach (SetEntity entry in Sets)
+            {
+                entry.Configuations.Remove(CurrentConfig);
+            }
+            ViewContext.SaveChanges();
+            UpdateSetLists();
+        }
+
+        private ObservableCollection<SetEntity> _EnabledSetList;
+        private ObservableCollection<SetEntity> _DisabledSetList;
+
+        private void UpdateSetLists()
+        {
+            if (_EnabledSetList == null)
+            {
+                _EnabledSetList = new ObservableCollection<SetEntity>();
+            }
+
+            if (_DisabledSetList == null)
+            {
+                _DisabledSetList = new ObservableCollection<SetEntity>();
+            }
+            
+            List<SetEntity> temp = ViewContext.Sets.ToList<SetEntity>();
+
+            // add any new sets
+            foreach (SetEntity entry in temp)
+            {
+                if ((!_EnabledSetList.Contains(entry) & (!_DisabledSetList.Contains(entry))))
+                {
+                    _DisabledSetList.Add(entry);
+                }               
+            }
+
+            // Disable any newly disabled
+            temp = _EnabledSetList.ToList<SetEntity>();
+            foreach (SetEntity entry in temp)
+            {
+                if (!entry.Configuations.Contains(CurrentConfig))
+                {
+                    _EnabledSetList.Remove(entry);
+                    _DisabledSetList.Add(entry);
+                }
+            }
+
+            // Enable any newly enabled
+            temp = _DisabledSetList.ToList<SetEntity>();
+            foreach (SetEntity entry in temp)
+            {
+                if (entry.Configuations.Contains(CurrentConfig))
+                {
+                    _EnabledSetList.Add(entry);
+                    _DisabledSetList.Remove(entry);
+                }
+            }
+        }
+
+        private ObservableCollection<SetEntity> GetEnabledSetList()
+        {
+            if (_EnabledSetList == null)
+            {
+                UpdateSetLists();
+            }
+            return _EnabledSetList;
+        }
+
+        private ObservableCollection<SetEntity> GetDisabledSetList()
+        {
+            if (_DisabledSetList == null)
+            {
+                UpdateSetLists();
+            }
+            return _DisabledSetList;
+        }
+
+        #endregion
+
+        #region Set Tab actions
+        public void AddSet()
+        {
+            SetEntity temp = ViewContext.Sets.Create<SetEntity>();
+            temp.IsDirty = true;
+            temp.Name = "<New Set>";
+            temp.Description = string.Empty;
+            ViewContext.Sets.Add(temp);
+            CurrentConfig.Sets.Add(temp);
+            CurrentSet.ChildSets.Add(temp);
+            CurrentSet = temp;
+            ViewContext.SaveChanges();
+            OnPropertyChanged("RootSets");
+        }
+
+        public void RemoveSet()
+        {
+            SetEntity temp = CurrentSet;
+            
+            _CurrentSet = null;
+
+            if (temp.ParentSet != null)
+            {
+                CurrentSet = temp.ParentSet;
+            }
+            else
+            {
+                CurrentSet = (from i in ViewContext.Sets
+                              where i.IsDefault == true & i.Name == "Default"
+                              select i).First<SetEntity>();
+            }
+
+            temp.Configuations.Clear();
+
+            foreach (DatafileEntity entry in temp.Datafiles)
+            {
+                CurrentSet.Datafiles.Add(entry);
+            }
+
+            foreach (SetEntity entry in temp.ChildSets)
+            {
+                CurrentSet.ChildSets.Add(entry);
+            }
+
+            ViewContext.Sets.Remove(temp);
+
+            ViewContext.SaveChanges();
+            OnPropertyChanged("RootSets");
+        }
+        #endregion
+
+
     }
 }
